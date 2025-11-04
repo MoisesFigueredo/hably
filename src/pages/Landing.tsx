@@ -12,7 +12,13 @@ import {
   Bell, 
   NotebookText, 
   History, 
-  CalendarDays 
+  CalendarDays,
+  GraduationCap,
+  Briefcase,
+  HeartPulse,
+  Paintbrush,
+  Quote,
+  XCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -127,8 +133,78 @@ const Landing = () => {
     },
   ];
 
+  const useCases = [
+    {
+      icon: GraduationCap,
+      title: "For Students",
+      description: "Organize your study routine, track reading habits, and balance academic life with personal well-being."
+    },
+    {
+      icon: Briefcase,
+      title: "For Professionals",
+      description: "Build career-enhancing habits like learning new skills, networking, and maintaining a healthy work-life balance."
+    },
+    {
+      icon: HeartPulse,
+      title: "For Health Enthusiasts",
+      description: "Track your fitness goals, water intake, meditation, and sleep patterns to build a healthier lifestyle."
+    },
+    {
+      icon: Paintbrush,
+      title: "For Creatives",
+      description: "Cultivate daily creative habits, whether it's writing, drawing, or practicing an instrument."
+    }
+  ];
+
+  const testimonials = [
+    {
+      quote: "Hably completely changed how I approach my goals. Seeing the streaks build up is incredibly motivating. I've been consistent for 3 months straight!",
+      name: "Sarah K.",
+      role: "Designer"
+    },
+    {
+      quote: "I love the simplicity. No clutter, just the features I need to stay focused. The smart reminders are a game-changer for my busy schedule.",
+      name: "Michael B.",
+      role: "Developer"
+    },
+    {
+      quote: "As a student, I juggle a lot. Hably helps me stay on top of my study habits, exercise, and personal projects. It's my daily command center.",
+      name: "Emily L.",
+      role: "University Student"
+    }
+  ];
+
+  const comparisonFeatures = [
+    {
+      feature: "Clutter-Free Interface",
+      hably: true,
+      others: false
+    },
+    {
+      feature: "Advanced Goal Grouping",
+      hably: true,
+      others: false
+    },
+    {
+      feature: "Privacy-First (No Data Selling)",
+      hably: true,
+      others: false
+    },
+    {
+      feature: "Complex, Confusing Analytics",
+      hably: false,
+      others: true
+    },
+    {
+      feature: "Intrusive Ads",
+      hably: false,
+      others: true
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Section: Hero */}
       <section className="relative overflow-hidden px-4 py-20 sm:py-32">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -199,6 +275,7 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Section: Features */}
       <section className="px-4 py-20 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -229,6 +306,156 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Section: Use Cases */}
+      <section className="px-4 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold text-foreground tracking-tight">
+              Perfect for everyone
+            </h3>
+            <p className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto">
+              No matter your goal, Hably adapts to your journey.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {useCases.map((useCase, index) => (
+              <div 
+                key={index} 
+                className="bg-card rounded-2xl p-8 border shadow-card space-y-4 text-center items-center flex flex-col"
+              >
+                <div className="p-3 rounded-xl bg-primary/10 w-fit">
+                    <useCase.icon className="h-8 w-8 text-primary" />
+                </div>
+                <h4 className="text-xl font-semibold text-foreground">{useCase.title}</h4>
+                <p className="text-muted-foreground">
+                  {useCase.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section: Testimonials */}
+      <section className="px-4 py-20 bg-muted/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold text-foreground tracking-tight">
+              Don't just take our word for it
+            </h3>
+            <p className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto">
+              See what our users are saying about their journey with Hably.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div 
+                key={index} 
+                className="bg-card rounded-2xl p-8 border shadow-card flex flex-col"
+              >
+                <Quote className="h-10 w-10 text-primary/30 mb-4" />
+                <blockquote className="text-lg text-foreground flex-1">
+                  "{testimonial.quote}"
+                </blockquote>
+                <div className="mt-6">
+                  <p className="font-semibold text-foreground">{testimonial.name}</p>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section: How it works */}
+      <section className="px-4 py-20">
+        <div className="max-w-6xl mx-auto">
+          <h3 className="text-3xl font-bold text-center mb-12 text-foreground">
+            How it works
+          </h3>
+          
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="p-4 rounded-full bg-primary/10 w-fit">
+                <ListPlus className="h-10 w-10 text-primary" />
+              </div>
+              <h4 className="text-xl font-semibold text-foreground">1. Create your habits</h4>
+              <p className="text-muted-foreground px-4">
+                Add the habits you want to build. Give them a name, an icon, and a color to make them your own.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-4">
+              <div className="p-4 rounded-full bg-primary/10 w-fit">
+                <Target className="h-10 w-10 text-primary" />
+              </div>
+              <h4 className="text-xl font-semibold text-foreground">2. Track your daily progress</h4>
+              <p className="text-muted-foreground px-4">
+                Each day, simply tap to mark your habits as complete. Build streaks and stay motivated.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-4">
+              <div className="p-4 rounded-full bg-primary/10 w-fit">
+                <BarChart3 className="h-10 w-10 text-primary" />
+              </div>
+              <h4 className="text-xl font-semibold text-foreground">3. Watch your growth</h4>
+              <p className="text-muted-foreground px-4">
+                Use simple statistics to see your consistency over time and celebrate your achievements.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section: Comparison */}
+      <section className="px-4 py-20 bg-muted/30">
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-3xl font-bold text-center mb-4 text-foreground">
+            Why Hably?
+          </h3>
+          <p className="text-lg text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
+            We focus on simplicity and calm, unlike other apps that overwhelm you.
+          </p>
+
+          <div className="bg-card rounded-2xl border shadow-card overflow-hidden">
+            <table className="w-full text-left">
+              <thead className="bg-muted/60">
+                <tr>
+                  <th className="p-6 text-sm font-semibold text-foreground">Feature</th>
+                  <th className="p-6 text-sm font-semibold text-foreground text-center w-32">Hably</th>
+                  <th className="p-6 text-sm font-semibold text-foreground text-center w-32">Other Trackers</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonFeatures.map((item) => (
+                  <tr key={item.feature} className="border-t border-border">
+                    <td className="p-6 text-muted-foreground">{item.feature}</td>
+                    <td className="p-6 text-center">
+                      {item.hably ? (
+                        <CheckCircle2 className="h-6 w-6 text-primary mx-auto" />
+                      ) : (
+                        <XCircle className="h-6 w-6 text-muted-foreground/50 mx-auto" />
+                      )}
+                    </td>
+                    <td className="p-6 text-center">
+                      {item.others ? (
+                        <CheckCircle2 className="h-6 w-6 text-primary mx-auto" />
+                      ) : (
+                        <XCircle className="h-6 w-6 text-muted-foreground/50 mx-auto" />
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Section: Pricing */}
       <section className="px-4 py-20">
         <div className="max-w-6xl mx-auto">
           <h3 className="text-3xl font-bold text-center mb-4 text-foreground">
@@ -278,47 +505,8 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Section: FAQ */}
       <section className="px-4 py-20 bg-muted/30">
-        <div className="max-w-6xl mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-12 text-foreground">
-            How it works
-          </h3>
-          
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="p-4 rounded-full bg-primary/10 w-fit">
-                <ListPlus className="h-10 w-10 text-primary" />
-              </div>
-              <h4 className="text-xl font-semibold text-foreground">1. Create your habits</h4>
-              <p className="text-muted-foreground px-4">
-                Add the habits you want to build. Give them a name, an icon, and a color to make them your own.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center space-y-4">
-              <div className="p-4 rounded-full bg-primary/10 w-fit">
-                <Target className="h-10 w-10 text-primary" />
-              </div>
-              <h4 className="text-xl font-semibold text-foreground">2. Track your daily progress</h4>
-              <p className="text-muted-foreground px-4">
-                Each day, simply tap to mark your habits as complete. Build streaks and stay motivated.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center space-y-4">
-              <div className="p-4 rounded-full bg-primary/10 w-fit">
-                <BarChart3 className="h-10 w-10 text-primary" />
-              </div>
-              <h4 className="text-xl font-semibold text-foreground">3. Watch your growth</h4>
-              <p className="text-muted-foreground px-4">
-                Use simple statistics to see your consistency over time and celebrate your achievements.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-20">
         <div className="max-w-3xl mx-auto">
           <h3 className="text-3xl font-bold text-center mb-10 text-foreground">
             Frequently Asked Questions
@@ -331,10 +519,11 @@ const Landing = () => {
         </div>
       </section>
 
-      <section className="px-4 py-20 bg-muted/30">
+       {/* Section: CTA */}
+      <section className="px-4 py-20">
        <div className="max-w-3xl mx-auto text-center space-y-6 bg-card rounded-3xl p-12 border shadow-lg">
          <h3 className="text-3xl font-bold text-foreground">
-            Ready to get started?
+           Ready to get started?
          </h3>
          <p className="text-lg text-muted-foreground">
            Join thousands of people who are transforming their lives, one habit at a time
@@ -349,6 +538,7 @@ const Landing = () => {
        </div>
       </section>
 
+      {/* Section: Footer */}
       <footer className="px-4 py-8 border-t">
         <div className="max-w-6xl mx-auto text-center text-sm text-muted-foreground">
           <p>© 2025 Hably. Made with love to help you build incredible habits</p>
