@@ -43,7 +43,7 @@ export const useHabits = () => {
       setHabits(data || []);
     } catch (error) {
       console.error('Error loading habits:', error);
-      toast.error('Erro ao carregar hábitos');
+      toast.error('Error loading habits');
     } finally {
       setLoading(false);
     }
@@ -70,16 +70,18 @@ export const useHabits = () => {
       if (error) throw error;
 
       setHabits([...habits, data]);
-      toast.success('Hábito adicionado!');
+      toast.success('Habit added!');
     } catch (error) {
       console.error('Error adding habit:', error);
-      toast.error('Erro ao adicionar hábito');
+      toast.error('Error adding habit');
     }
   };
 
   const toggleHabit = async (id: string) => {
     const today = getTodayDate();
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000)
+      .toISOString()
+      .split('T')[0];
     const habit = habits.find((h) => h.id === id);
 
     if (!habit) return;
@@ -90,11 +92,9 @@ export const useHabits = () => {
       let newStreak: number;
 
       if (isCompleted) {
-        // Unchecking
         newCompletedDates = habit.completed_dates.filter((d) => d !== today);
         newStreak = Math.max(0, habit.streak - 1);
       } else {
-        // Checking
         newCompletedDates = [...habit.completed_dates, today];
         const wasCompletedYesterday = habit.completed_dates.includes(yesterday);
         newStreak = wasCompletedYesterday ? habit.streak + 1 : 1;
@@ -125,7 +125,7 @@ export const useHabits = () => {
       );
     } catch (error) {
       console.error('Error toggling habit:', error);
-      toast.error('Erro ao atualizar hábito');
+      toast.error('Error updating habit');
     }
   };
 
@@ -136,10 +136,10 @@ export const useHabits = () => {
       if (error) throw error;
 
       setHabits(habits.filter((h) => h.id !== id));
-      toast.success('Hábito removido');
+      toast.success('Habit removed');
     } catch (error) {
       console.error('Error deleting habit:', error);
-      toast.error('Erro ao remover hábito');
+      toast.error('Error removing habit');
     }
   };
 

@@ -1,3 +1,4 @@
+// src/pages/App.tsx
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -33,19 +34,19 @@ const AppPage = () => {
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast.error('Erro ao sair');
+      toast.error('Error signing out');
     } else {
-      toast.success('Até logo!');
+      toast.success('Signed out successfully!');
       navigate('/');
     }
   };
 
   const motivationalQuotes = [
-    "Pequenos hábitos constroem grandes resultados",
-    "Um dia de cada vez, você está progredindo",
-    "Constância é a chave para o sucesso",
-    "Cada hábito completado é uma vitória",
-    "Você está criando a melhor versão de si mesmo",
+    "Small habits build great results",
+    "One day at a time, you are progressing",
+    "Consistency is the key to success",
+    "Every habit completed is a victory",
+    "You are creating the best version of yourself",
   ];
 
   const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
@@ -53,13 +54,13 @@ const AppPage = () => {
   if (authLoading || habitsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Carregando...</div>
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col max-w-md mx-auto bg-background">
+    <div className="min-h-screen flex flex-col max-w-md md:max-w-2xl lg:max-w-4xl mx-auto bg-background">
       {/* Fixed Header */}
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b px-5 py-4 space-y-2">
         <div className="flex items-center justify-between">
@@ -97,7 +98,7 @@ const AppPage = () => {
           {habits.length === 0 ? (
             <div className="text-center py-16 bg-card rounded-2xl border">
               <p className="text-muted-foreground text-sm px-4">
-                Nenhum hábito ainda. Toque no botão abaixo para começar! 🎯
+                No habits yet. Tap the button below to get started!
               </p>
             </div>
           ) : (
@@ -115,7 +116,7 @@ const AppPage = () => {
       </main>
 
       {/* Fixed Bottom Button */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-5 bg-gradient-to-t from-background via-background to-transparent">
+      <div className="fixed bottom-0 left-0 right-0 max-w-md md:max-w-2xl lg:max-w-4xl mx-auto p-5 bg-gradient-to-t from-background via-background to-transparent">
         <AddHabitDialog onAdd={addHabit} />
       </div>
     </div>
