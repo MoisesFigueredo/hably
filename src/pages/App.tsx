@@ -1,5 +1,5 @@
 // src/pages/App.tsx
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useHabits } from '@/hooks/useHabits';
@@ -41,15 +41,35 @@ const AppPage = () => {
     }
   };
 
+  // Habit Lists Logic
+  const [incompleteHabits, completedHabits] = useMemo(() => {
+    const incomplete = [];
+    const completed = [];
+
+    const sortedHabits = [...habits].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+
+    for (const habit of sortedHabits) {
+      if (isCompletedToday(habit.id)) {
+        completed.push(habit);
+      } else {
+        incomplete.push(habit);
+      }
+    }
+    return [incomplete, completed];
+  }, [habits, isCompletedToday]);
+
   const motivationalQuotes = [
-    "Small habits build great results",
-    "One day at a time, you are progressing",
-    "Consistency is the key to success",
-    "Every habit completed is a victory",
-    "You are creating the best version of yourself",
+    'Small habits build great results',
+    'One day at a time, you are progressing',
+    'Consistency is the key to success',
+    'Every habit completed is a victory',
+    'You are creating the best version of yourself',
   ];
 
-  const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+  const randomQuote =
+    motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
 
   if (authLoading || habitsLoading) {
     return (
@@ -94,7 +114,7 @@ const AppPage = () => {
         />
 
         {/* Habits List */}
-        <div className="space-y-2.5">
+        <div className="space-y-4">
           {habits.length === 0 ? (
             <div className="text-center py-16 bg-card rounded-2xl border">
               <p className="text-muted-foreground text-sm px-4">
@@ -102,15 +122,54 @@ const AppPage = () => {
               </p>
             </div>
           ) : (
-            habits.map((habit) => (
-              <HabitItem
-                key={habit.id}
-                habit={habit}
-                isCompleted={isCompletedToday(habit.id)}
-                onToggle={() => toggleHabit(habit.id)}
-                onDelete={() => deleteHabit(habit.id)}
-              />
-            ))
+            <>
+              {/* Incomplete Habits */}
+              <div className="space-y-2.5">
+                {incompleteHabits.length === 0 &&
+                completedHabits.length > 0 ? (
+                  <div className="text-center py-10 bg-card rounded-2xl border border-dashed">
+                    <p className="text-muted-foreground text-sm px-4">
+                      All habits completed for today! Great job.
+                    </p>
+                  </div>
+                ) : (
+                  incompleteHabits.map((habit) => (
+                    <HabitItem
+                      key={habit.id}
+                      habit={habit}
+                      isCompleted={isCompletedToday(habit.id)}
+                      onToggle={() => toggleHabit(habit.id)}
+                      onDelete={() => deleteHabit(habit.id)}
+                    />
+                  ))
+                )}
+              </div>
+
+              {/* Completed Habits */}
+              {completedHabits.length > 0 && (
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center">
+                    <div className="flex-1 border-t border-dashed"></div>
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3">
+                      Completed
+                    </h3>
+                    <div className="flex-1 border-t border-dashed"></div>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {completedHabits.map((habit) => (
+                      <HabitItem
+                        key={habit.id}
+                        habit={habit}
+                        isCompleted={isCompletedToday(habit.id)}
+                        onToggle={() => toggleHabit(habit.id)}
+                        onDelete={() => deleteHabit(habit.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>
