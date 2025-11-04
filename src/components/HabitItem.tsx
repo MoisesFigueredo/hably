@@ -1,4 +1,4 @@
-import { Habit } from '@/types/habit';
+import { Habit } from '@/hooks/useHabits';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Flame, Trash2 } from 'lucide-react';

@@ -14,7 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      habits: {
+        Row: {
+          completed_dates: string[]
+          created_at: string
+          id: string
+          last_completed: string | null
+          name: string
+          streak: number
+          user_id: string
+        }
+        Insert: {
+          completed_dates?: string[]
+          created_at?: string
+          id?: string
+          last_completed?: string | null
+          name: string
+          streak?: number
+          user_id: string
+        }
+        Update: {
+          completed_dates?: string[]
+          created_at?: string
+          id?: string
+          last_completed?: string | null
+          name?: string
+          streak?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "habits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

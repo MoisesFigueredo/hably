@@ -1,10 +1,18 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { useHabits } from '@/hooks/useHabits';
 import { HabitItem } from '@/components/HabitItem';
 import { AddHabitDialog } from '@/components/AddHabitDialog';
 import { StatsCard } from '@/components/StatsCard';
-import { Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sparkles, LogOut } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-const Index = () => {
+const AppPage = () => {
+  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
   const {
     habits,
     addHabit,
@@ -13,7 +21,24 @@ const Index = () => {
     isCompletedToday,
     getMaxStreak,
     getTodayCompletedCount,
+    loading: habitsLoading,
   } = useHabits();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [user, authLoading, navigate]);
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error('Erro ao sair');
+    } else {
+      toast.success('Até logo!');
+      navigate('/');
+    }
+  };
 
   const motivationalQuotes = [
     "Pequenos hábitos constroem grandes resultados",
@@ -25,15 +50,33 @@ const Index = () => {
 
   const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
 
+  if (authLoading || habitsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Carregando...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col max-w-md mx-auto bg-background">
       {/* Fixed Header */}
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b px-5 py-4 space-y-2">
-        <div className="flex items-center justify-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">
-            Hably
-          </h1>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold text-foreground tracking-tight">
+              Hably
+            </h1>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleSignOut}
+            className="h-9 w-9"
+          >
+            <LogOut className="h-5 w-5" />
+          </Button>
         </div>
         <p className="text-sm text-muted-foreground text-center">
           {randomQuote}
@@ -42,7 +85,6 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="flex-1 px-5 py-5 space-y-5 animate-fade-in pb-24">
-
         {/* Stats */}
         <StatsCard
           todayCompleted={getTodayCompletedCount()}
@@ -80,4 +122,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default AppPage;

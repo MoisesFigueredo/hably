@@ -1,155 +1,166 @@
 import { useState, useEffect } from 'react';
-import { Habit } from '@/types/habit';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
-const STORAGE_KEY = 'hably_habits';
-const LAST_RESET_KEY = 'hably_last_reset';
+export interface Habit {
+  id: string;
+  name: string;
+  streak: number;
+  last_completed: string | null;
+  created_at: string;
+  completed_dates: string[];
+  user_id: string;
+}
 
 const getTodayDate = () => {
   return new Date().toISOString().split('T')[0];
 };
 
-const shouldResetDaily = () => {
-  const lastReset = localStorage.getItem(LAST_RESET_KEY);
-  const today = getTodayDate();
-  return lastReset !== today;
-};
-
 export const useHabits = () => {
+  const { user } = useAuth();
   const [habits, setHabits] = useState<Habit[]>([]);
-  const [todayCompleted, setTodayCompleted] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadHabits();
-  }, []);
-
-  const loadHabits = () => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const loadedHabits: Habit[] = JSON.parse(stored);
-      setHabits(loadedHabits);
-
-      // Check if we need to reset daily completion
-      if (shouldResetDaily()) {
-        resetDailyCompletion(loadedHabits);
-      } else {
-        // Load today's completed habits
-        const today = getTodayDate();
-        const completed = new Set(
-          loadedHabits
-            .filter(h => h.completedDates.includes(today))
-            .map(h => h.id)
-        );
-        setTodayCompleted(completed);
-      }
-    }
-  };
-
-  const resetDailyCompletion = (currentHabits: Habit[]) => {
-    const today = getTodayDate();
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-    const updatedHabits = currentHabits.map(habit => {
-      // If habit was completed yesterday, keep streak, otherwise reset it
-      if (!habit.completedDates.includes(yesterday)) {
-        return { ...habit, streak: 0 };
-      }
-      return habit;
-    });
-
-    setHabits(updatedHabits);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHabits));
-    localStorage.setItem(LAST_RESET_KEY, today);
-    setTodayCompleted(new Set());
-  };
-
-  const saveHabits = (updatedHabits: Habit[]) => {
-    setHabits(updatedHabits);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedHabits));
-  };
-
-  const addHabit = (name: string) => {
-    const newHabit: Habit = {
-      id: crypto.randomUUID(),
-      name,
-      streak: 0,
-      lastCompleted: null,
-      createdAt: new Date().toISOString(),
-      completedDates: [],
-    };
-    saveHabits([...habits, newHabit]);
-  };
-
-  const toggleHabit = (id: string) => {
-    const today = getTodayDate();
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-    const updatedHabits = habits.map(habit => {
-      if (habit.id === id) {
-        const isCompleted = habit.completedDates.includes(today);
-        
-        if (isCompleted) {
-          // Unchecking - remove today from completed dates and decrease streak
-          return {
-            ...habit,
-            completedDates: habit.completedDates.filter(d => d !== today),
-            streak: Math.max(0, habit.streak - 1),
-            lastCompleted: habit.completedDates.length > 1 
-              ? habit.completedDates[habit.completedDates.length - 2] 
-              : null,
-          };
-        } else {
-          // Checking - add today and calculate streak
-          const newCompletedDates = [...habit.completedDates, today];
-          const wasCompletedYesterday = habit.completedDates.includes(yesterday);
-          const newStreak = wasCompletedYesterday ? habit.streak + 1 : 1;
-
-          return {
-            ...habit,
-            completedDates: newCompletedDates,
-            streak: newStreak,
-            lastCompleted: today,
-          };
-        }
-      }
-      return habit;
-    });
-
-    saveHabits(updatedHabits);
-
-    // Update today's completed set
-    const newCompleted = new Set(todayCompleted);
-    if (newCompleted.has(id)) {
-      newCompleted.delete(id);
+    if (user) {
+      loadHabits();
     } else {
-      newCompleted.add(id);
+      setHabits([]);
+      setLoading(false);
     }
-    setTodayCompleted(newCompleted);
+  }, [user]);
+
+  const loadHabits = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('habits')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+
+      setHabits(data || []);
+    } catch (error) {
+      console.error('Error loading habits:', error);
+      toast.error('Erro ao carregar hábitos');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteHabit = (id: string) => {
-    saveHabits(habits.filter(h => h.id !== id));
-    const newCompleted = new Set(todayCompleted);
-    newCompleted.delete(id);
-    setTodayCompleted(newCompleted);
+  const addHabit = async (name: string) => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('habits')
+        .insert([
+          {
+            user_id: user.id,
+            name,
+            streak: 0,
+            last_completed: null,
+            completed_dates: [],
+          },
+        ])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setHabits([...habits, data]);
+      toast.success('Hábito adicionado!');
+    } catch (error) {
+      console.error('Error adding habit:', error);
+      toast.error('Erro ao adicionar hábito');
+    }
+  };
+
+  const toggleHabit = async (id: string) => {
+    const today = getTodayDate();
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    const habit = habits.find((h) => h.id === id);
+
+    if (!habit) return;
+
+    try {
+      const isCompleted = habit.completed_dates.includes(today);
+      let newCompletedDates: string[];
+      let newStreak: number;
+
+      if (isCompleted) {
+        // Unchecking
+        newCompletedDates = habit.completed_dates.filter((d) => d !== today);
+        newStreak = Math.max(0, habit.streak - 1);
+      } else {
+        // Checking
+        newCompletedDates = [...habit.completed_dates, today];
+        const wasCompletedYesterday = habit.completed_dates.includes(yesterday);
+        newStreak = wasCompletedYesterday ? habit.streak + 1 : 1;
+      }
+
+      const { error } = await supabase
+        .from('habits')
+        .update({
+          completed_dates: newCompletedDates,
+          streak: newStreak,
+          last_completed: isCompleted ? null : today,
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setHabits(
+        habits.map((h) =>
+          h.id === id
+            ? {
+                ...h,
+                completed_dates: newCompletedDates,
+                streak: newStreak,
+                last_completed: isCompleted ? null : today,
+              }
+            : h
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling habit:', error);
+      toast.error('Erro ao atualizar hábito');
+    }
+  };
+
+  const deleteHabit = async (id: string) => {
+    try {
+      const { error } = await supabase.from('habits').delete().eq('id', id);
+
+      if (error) throw error;
+
+      setHabits(habits.filter((h) => h.id !== id));
+      toast.success('Hábito removido');
+    } catch (error) {
+      console.error('Error deleting habit:', error);
+      toast.error('Erro ao remover hábito');
+    }
   };
 
   const isCompletedToday = (id: string) => {
     const today = getTodayDate();
-    const habit = habits.find(h => h.id === id);
-    return habit?.completedDates.includes(today) || false;
+    const habit = habits.find((h) => h.id === id);
+    return habit?.completed_dates.includes(today) || false;
   };
 
   const getMaxStreak = () => {
-    return habits.length > 0 ? Math.max(...habits.map(h => h.streak)) : 0;
+    return habits.length > 0 ? Math.max(...habits.map((h) => h.streak)) : 0;
   };
 
   const getTodayCompletedCount = () => {
     const today = getTodayDate();
-    return habits.filter(h => h.completedDates.includes(today)).length;
+    return habits.filter((h) => h.completed_dates.includes(today)).length;
   };
 
   return {
     habits,
+    loading,
     addHabit,
     toggleHabit,
     deleteHabit,
@@ -158,4 +169,3 @@ export const useHabits = () => {
     getTodayCompletedCount,
   };
 };
-
