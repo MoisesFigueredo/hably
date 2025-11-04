@@ -15,28 +15,28 @@ export const HabitItem = ({ habit, isCompleted, onToggle, onDelete }: HabitItemP
   return (
     <div 
       className={cn(
-        "group flex items-center gap-4 p-4 rounded-xl border bg-card shadow-card transition-smooth hover:shadow-card-hover",
+        "group flex items-center gap-3.5 p-4 rounded-2xl border bg-card active:scale-[0.98] transition-smooth",
         isCompleted && "bg-success-light border-primary"
       )}
     >
       <Checkbox
         checked={isCompleted}
         onCheckedChange={onToggle}
-        className="h-6 w-6 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+        className="h-7 w-7 data-[state=checked]:bg-primary data-[state=checked]:border-primary shrink-0"
       />
       
       <div className="flex-1 min-w-0">
         <h3 className={cn(
-          "font-medium text-foreground transition-smooth",
+          "font-medium text-foreground transition-smooth text-base",
           isCompleted && "line-through text-muted-foreground"
         )}>
           {habit.name}
         </h3>
         
         {habit.streak > 0 && (
-          <div className="flex items-center gap-1.5 mt-1 text-sm font-medium text-primary">
+          <div className="flex items-center gap-1.5 mt-1.5 text-sm font-semibold text-primary">
             <Flame className="h-4 w-4" />
-            <span>{habit.streak} {habit.streak === 1 ? 'dia' : 'dias'} seguidos</span>
+            <span>{habit.streak} {habit.streak === 1 ? 'dia' : 'dias'}</span>
           </div>
         )}
       </div>
@@ -45,9 +45,9 @@ export const HabitItem = ({ habit, isCompleted, onToggle, onDelete }: HabitItemP
         variant="ghost"
         size="icon"
         onClick={onDelete}
-        className="opacity-0 group-hover:opacity-100 transition-smooth text-muted-foreground hover:text-destructive"
+        className="shrink-0 text-muted-foreground hover:text-destructive h-10 w-10"
       >
-        <Trash2 className="h-4 w-4" />
+        <Trash2 className="h-5 w-5" />
       </Button>
     </div>
   );

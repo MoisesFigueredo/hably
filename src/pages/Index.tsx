@@ -26,20 +26,22 @@ const Index = () => {
   const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto space-y-8 animate-fade-in">
-        {/* Header */}
-        <header className="text-center space-y-3">
-          <div className="flex items-center justify-center gap-2">
-            <Sparkles className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl sm:text-5xl font-bold text-foreground tracking-tight">
-              Hably
-            </h1>
-          </div>
-          <p className="text-lg text-muted-foreground font-medium">
-            {randomQuote}
-          </p>
-        </header>
+    <div className="min-h-screen flex flex-col max-w-md mx-auto bg-background">
+      {/* Fixed Header */}
+      <header className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b px-5 py-4 space-y-2">
+        <div className="flex items-center justify-center gap-2">
+          <Sparkles className="h-6 w-6 text-primary" />
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">
+            Hably
+          </h1>
+        </div>
+        <p className="text-sm text-muted-foreground text-center">
+          {randomQuote}
+        </p>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 px-5 py-5 space-y-5 animate-fade-in pb-24">
 
         {/* Stats */}
         <StatsCard
@@ -48,17 +50,12 @@ const Index = () => {
           maxStreak={getMaxStreak()}
         />
 
-        {/* Add Habit Button */}
-        <div className="flex justify-center">
-          <AddHabitDialog onAdd={addHabit} />
-        </div>
-
         {/* Habits List */}
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {habits.length === 0 ? (
-            <div className="text-center py-12 bg-card rounded-xl border shadow-card">
-              <p className="text-muted-foreground">
-                Nenhum hábito ainda. Adicione seu primeiro hábito para começar! 🎯
+            <div className="text-center py-16 bg-card rounded-2xl border">
+              <p className="text-muted-foreground text-sm px-4">
+                Nenhum hábito ainda. Toque no botão abaixo para começar! 🎯
               </p>
             </div>
           ) : (
@@ -73,11 +70,11 @@ const Index = () => {
             ))
           )}
         </div>
+      </main>
 
-        {/* Footer */}
-        <footer className="text-center text-sm text-muted-foreground pt-8">
-          <p>Feito com 💚 para ajudar você a construir hábitos incríveis</p>
-        </footer>
+      {/* Fixed Bottom Button */}
+      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-5 bg-gradient-to-t from-background via-background to-transparent">
+        <AddHabitDialog onAdd={addHabit} />
       </div>
     </div>
   );

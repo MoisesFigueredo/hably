@@ -32,30 +32,30 @@ export const AddHabitDialog = ({ onAdd }: AddHabitDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full sm:w-auto gap-2 shadow-md hover:shadow-lg transition-smooth">
-          <Plus className="h-4 w-4" />
+        <Button className="w-full gap-2 shadow-lg hover:shadow-xl transition-smooth h-14 text-base font-semibold rounded-2xl">
+          <Plus className="h-5 w-5" />
           Adicionar Hábito
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Novo Hábito</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-xl">Novo Hábito</DialogTitle>
+            <DialogDescription className="text-base">
               Adicione um novo hábito para acompanhar diariamente.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
+          <div className="py-5">
             <Input
               placeholder="Ex: Ler 30 minutos"
               value={habitName}
               onChange={(e) => setHabitName(e.target.value)}
-              className="w-full"
+              className="w-full h-12 text-base"
               autoFocus
             />
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={!habitName.trim()}>
+            <Button type="submit" disabled={!habitName.trim()} className="w-full h-12 text-base">
               Adicionar
             </Button>
           </DialogFooter>

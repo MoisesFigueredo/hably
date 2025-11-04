@@ -10,37 +10,37 @@ export const StatsCard = ({ todayCompleted, totalHabits, maxStreak }: StatsCardP
   const completionRate = totalHabits > 0 ? Math.round((todayCompleted / totalHabits) * 100) : 0;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div className="bg-card rounded-xl p-6 shadow-card border">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <CheckCircle2 className="h-5 w-5 text-primary" />
+    <div className="grid grid-cols-2 gap-3">
+      <div className="bg-card rounded-2xl p-5 border">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-2 rounded-xl bg-primary/10">
+            <CheckCircle2 className="h-4 w-4 text-primary" />
           </div>
-          <h3 className="font-semibold text-foreground">Hoje</h3>
+          <h3 className="font-semibold text-foreground text-sm">Hoje</h3>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           <p className="text-3xl font-bold text-foreground">
             {todayCompleted}/{totalHabits}
           </p>
-          <p className="text-sm text-muted-foreground">
-            {completionRate}% concluído
+          <p className="text-xs text-muted-foreground">
+            {completionRate}% completo
           </p>
         </div>
       </div>
 
-      <div className="bg-card rounded-xl p-6 shadow-card border">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-lg bg-accent/30">
-            <TrendingUp className="h-5 w-5 text-accent-foreground" />
+      <div className="bg-card rounded-2xl p-5 border">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-2 rounded-xl bg-accent/30">
+            <TrendingUp className="h-4 w-4 text-accent-foreground" />
           </div>
-          <h3 className="font-semibold text-foreground">Maior Streak</h3>
+          <h3 className="font-semibold text-foreground text-sm">Recorde</h3>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           <p className="text-3xl font-bold text-foreground">
             {maxStreak}
           </p>
-          <p className="text-sm text-muted-foreground">
-            {maxStreak === 1 ? 'dia consecutivo' : 'dias consecutivos'}
+          <p className="text-xs text-muted-foreground">
+            {maxStreak === 1 ? 'dia' : 'dias'}
           </p>
         </div>
       </div>
