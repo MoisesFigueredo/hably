@@ -1,10 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { CheckCircle2, Mail, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { CheckCircle2, Mail } from 'lucide-react';
 
 const ThankYou = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Gradient Header */}
@@ -71,18 +67,6 @@ const ThankYou = () => {
               <br />
               achieve your goals.
             </p>
-          </div>
-
-          {/* CTA Button */}
-          <div className="pt-8">
-            <Button
-              size="lg"
-              className="h-14 text-lg px-10 rounded-2xl shadow-lg"
-              onClick={() => navigate('/app')}
-            >
-              <Sparkles className="h-5 w-5 mr-2" />
-              Go to Dashboard
-            </Button>
           </div>
         </div>
       </div>
