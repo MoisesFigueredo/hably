@@ -76,6 +76,7 @@ const Landing = () => {
       description: 'For individuals starting their journey.',
       features: ['Track up to 10 habits', 'Basic statistics', 'Community support'],
       highlight: false,
+      checkoutUrl: 'https://pay.hablyapp.com/checkout/202514538:1',
     },
     {
       name: 'Pro',
@@ -83,6 +84,7 @@ const Landing = () => {
       description: 'For power users who want more.',
       features: ['Unlimited habits', 'Advanced statistics', 'Data export', 'Priority support'],
       highlight: true,
+      checkoutUrl: 'https://pay.hablyapp.com/checkout/202514539:1',
     },
     {
       name: 'Business',
@@ -90,6 +92,7 @@ const Landing = () => {
       description: 'For small teams and professionals.',
       features: ['All Pro features', 'Team collaboration (5 users)', 'Shared dashboards'],
       highlight: false,
+      checkoutUrl: 'https://pay.hablyapp.com/checkout/202514540:1',
     },
     {
       name: 'Enterprise',
@@ -97,6 +100,7 @@ const Landing = () => {
       description: 'For large organizations.',
       features: ['All Business features', 'Unlimited users', 'Custom integrations', '24/7 support'],
       highlight: false,
+      checkoutUrl: 'https://pay.hablyapp.com/checkout/202514541:1',
     },
   ];
 
@@ -496,6 +500,7 @@ const Landing = () => {
                   size="lg" 
                   className="w-full mt-10 h-12 text-base"
                   variant={plan.highlight ? 'default' : 'outline'}
+                  onClick={() => window.open(plan.checkoutUrl, '_blank')}
                 >
                   Get Started
                 </Button>
